@@ -11,17 +11,19 @@ function Register() {
   const [rePassword, setrePassword] = useState("");
   const [error, setError] = useState({});
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
 
   function handleSubmit(event) {
     event.preventDefault();
+    setShow(true);
     if (!(password === rePassword)) {
-      setShow(true);
       setError({
         message: "Password Mismatch",
       });
       return;
     }
+    setIsLoading(true);
     async function register() {
       try {
         await axios.post(process.env.REACT_APP_REGISTER_API, {
@@ -30,9 +32,11 @@ function Register() {
           name,
           mobile,
         });
+        setIsLoading(false);
         setIsRegister(true);
-        setShow(true);
       } catch (error) {
+        setIsLoading(false);
+        setIsRegister(false);
         setError({
           message:
             error.response.status === 400
@@ -40,8 +44,6 @@ function Register() {
               : "User Already Exists",
           status: error.response.status,
         });
-        setIsRegister(false);
-        setShow(true);
       }
     }
     register();
@@ -51,12 +53,16 @@ function Register() {
     <div className="wrapper">
       {show ? (
         <Alert
-          variant={isRegister ? "success" : "danger"}
+          variant={isLoading ? "info" : isRegister ? "success" : "danger"}
           onClose={() => setShow(false)}
           dismissible
         >
           <p style={{ margin: "0px" }}>
-            {isRegister ? "Registration Successful" : error.message}
+            {isLoading
+              ? "Loading . . . "
+              : isRegister
+              ? "Registration Successful"
+              : error.message}
           </p>
         </Alert>
       ) : (

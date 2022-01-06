@@ -8,27 +8,27 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState({});
   const [show, setShow] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
 
   function handleSubmit(event) {
     event.preventDefault();
+    setIsLoading(true);
+    setShow(true);
     async function login() {
       try {
         await axios.post(process.env.REACT_APP_LOGIN_API, {
           email,
           password,
         });
-        setIsLogin(true);
-        setShow(true);
         history.push("/welcome");
       } catch (error) {
         setError({
           message: error.response.data.errors,
           status: error.response.status,
         });
-        setIsLogin(false);
+        setIsLoading(false);
         setShow(true);
       }
     }
@@ -39,12 +39,12 @@ function Login() {
     <div className="wrapper">
       {show ? (
         <Alert
-          variant={isLogin ? "success" : "danger"}
+          variant={isLoading ? "info" : "danger"}
           onClose={() => setShow(false)}
           dismissible
         >
           <p style={{ margin: "0px" }}>
-            {isLogin ? "Login Successful" : error.message}
+            {isLoading ? "Loading . . . " : error.message}
           </p>
         </Alert>
       ) : (
