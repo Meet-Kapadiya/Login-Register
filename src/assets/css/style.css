@@ -199,3 +199,9 @@ form .btn input[type="submit"] {
   font-weight: 500;
   cursor: pointer;
 }
+
+@media (max-width: 425px) {
+  .wrapper {
+    width: 100%;
+  }
+}
