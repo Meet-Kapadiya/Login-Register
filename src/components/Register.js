@@ -24,7 +24,7 @@ function Register() {
     }
     async function register() {
       try {
-        let response = await axios.post(process.env.REACT_APP_REGISTER_API, {
+        await axios.post(process.env.REACT_APP_REGISTER_API, {
           email,
           password,
           name,
